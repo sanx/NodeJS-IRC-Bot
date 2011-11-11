@@ -12,16 +12,18 @@ var sys = require( 'sys' ),
  * Config
  */
 var config = {
-	host:		'irc.freenode.com',
-	port:		6667,
-	nick:		'NodeBot',
-	username:	'NodeBot',
+	//host:		'irc.freenode.com',
+	host:		'irc.corp.yahoo.com',
+	port:		6697,
+	nick:		'chidobot',
+	pass:       'SIMram30',
+	username:	'chidobot',
 	realname:	'Powered by Michael Owens',
-	channels:	['#nodejs'],
+	channels:	['#mexico'],
 	command:	'.',
-	debug:		false,
+	debug:		true,
 	
-	plugins:	[ 'global', 'reload', 'gezien', 'textfilter' ]
+	plugins:	[ 'global', 'reload', 'gezien', 'textfilter', 'prue1' ]
 };
 
 /**

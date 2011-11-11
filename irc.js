@@ -9,7 +9,8 @@
 var sys = require( 'sys' ),
 	net = require( 'net' ),
 	fs = require( 'fs' ),
-	channel = require( './channel' );
+	channel = require( './channel' ),
+	tls = require( 'tls' );
 
 Server = exports.Server = function( config ) {
 	
@@ -24,6 +25,7 @@ Server.prototype.initialize = function( config ) {
 	this.host = config.host || '127.0.0.1';
 	this.port = config.port || 6667;
 	this.nick = config.nick || 'MikeBot';
+	this.pass = config.pass || 'MikeBot';
 	this.username = config.username || 'MikeBot';
 	this.realname = config.realname || 'Powered by MikeBot';
 	this.command = config.command || '.';
@@ -55,16 +57,21 @@ Server.prototype.initialize = function( config ) {
 };
 
 Server.prototype.connect = function( ) {
-	
-	var c = this.connection = net.createConnection( this.port, this.host );
+	var options = [ ];	
+	//var c = this.connection = net.createConnection( this.port, this.host );
+	console.log('aqui conectando (o tratando)');
+	var c = this.connection = tls.connect( this.port, this.host, options, function() {
+			console.log('client connected', c.authorized ? 'authorized' : 'unauthorized');
+	} );
     c.setEncoding( this.encoding );
     c.setTimeout( this.timeout );
-	
+
+	this.onConnect();
 	this.addListener( 'connect', this.onConnect );
     this.addListener( 'data', this.onReceive );
-    this.addListener( 'eof', this.onEOF );
+    /*this.addListener( 'eof', this.onEOF );
     this.addListener( 'timeout', this.onTimeout );
-    this.addListener( 'close', this.onClose );
+    this.addListener( 'close', this.onClose );*/
 	
 };
 
@@ -83,11 +90,15 @@ Server.prototype.onConnect = function( ) {
 	
 	sys.puts( 'connected' );
 	
+	if(this.pass) {
+		this.raw( 'PASS', this.pass );
+	}
     this.raw( 'NICK', this.nick );
     this.raw( 'USER', this.username, '0', '*', ':' + this.realname );
     
     this.emit( 'connect' );
 	
+	this.raw('JOIN', "#mexico");
 };
 
 Server.prototype.onReceive = function( chunk ) {
