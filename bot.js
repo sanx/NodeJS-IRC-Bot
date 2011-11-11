@@ -16,7 +16,7 @@ var config = {
 	host:		'irc.corp.yahoo.com',
 	port:		6697,
 	nick:		'chidobot',
-	pass:       'SIMram30',
+	pass:       'unknown',
 	username:	'chidobot',
 	realname:	'Powered by Michael Owens',
 	channels:	['#mexico'],
